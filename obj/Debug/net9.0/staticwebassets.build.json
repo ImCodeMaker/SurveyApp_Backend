@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "Dqao18koRJ4/jIO2xkOA+LrCal8oMAkQDn2GyaW3vjc=",
+  "Source": "SurveyApp_Server",
+  "BasePath": "_content/SurveyApp_Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

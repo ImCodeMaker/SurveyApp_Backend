@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\SurveyApp_Server.props" />
+</Project>
