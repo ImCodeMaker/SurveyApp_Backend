@@ -34,3 +34,4 @@ C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\obj\Debug\net9.0\
 C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\obj\Debug\net9.0\SurveyApp_Server.pdb
 C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\obj\Debug\net9.0\SurveyApp_Server.genruntimeconfig.cache
 C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\obj\Debug\net9.0\ref\SurveyApp_Server.dll
+C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\obj\Debug\net9.0\SurveyApp_Server.sourcelink.json
