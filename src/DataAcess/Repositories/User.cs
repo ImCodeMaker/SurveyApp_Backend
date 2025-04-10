@@ -69,6 +69,7 @@ public class UserRepository : IUser
                 currentUser.Name = users.Name;
                 currentUser.LastName = users.LastName;
                 currentUser.Email = users.Email;
+                currentUser.Password_Hash = users.Password_Hash;
 
                 var findforDuplicates = await appDbContext!.Users.FirstOrDefaultAsync(user => user.Name == users.Name || user.LastName == users.LastName || user.Email == users.Email);
 
