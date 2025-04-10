@@ -9,13 +9,13 @@ public class UserRepository : IUser
         appDbContext = _appDbContext;
     }
 
-    public async Task createUser(User user)
+    public async Task<User> createUser(User user)
     {
         try
         {
-            await appDbContext!.Users.AddAsync(user);
+            var addedEntity = await appDbContext!.Users.AddAsync(user);
             await appDbContext.SaveChangesAsync();
-            
+            return addedEntity.Entity;
         }
         catch (Exception)
         {

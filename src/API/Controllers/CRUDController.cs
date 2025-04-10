@@ -43,7 +43,7 @@ public class CRUDController : ControllerBase
             };
 
             await _userServices!.setUser(newUser);
-            return StatusCode(201, new { message = $"The user {user.Name} was successfully created" });
+            return StatusCode(201, new { message = $"The user  {newUser.Id} was successfully created" });
         }
         catch (Exception ex)
         {
@@ -57,7 +57,6 @@ public class CRUDController : ControllerBase
         try
         {
             await _userServices!.deleteUser(Id);
-
             return StatusCode(201, new {message = $"The user with the Id: {Id} was sucessfully deleted."});
         }
         catch (Exception ex)
@@ -87,7 +86,6 @@ public class CRUDController : ControllerBase
             return StatusCode(500, new {message = $"There was a problem editing the user with the name: {user.Name}, please try again; for more details {ex}"});
         }
     }
-
 }
 
 

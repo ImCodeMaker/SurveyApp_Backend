@@ -20,6 +20,9 @@ public class Program
         // Add your repositories and services
         builder.Services.AddScoped<IUser, UserRepository>();
         builder.Services.AddScoped<UsersCRUDService, UserServices>();
+        builder.Services.AddScoped<IHashingServices, HashingMethod>();
+        builder.Services.AddScoped<ILogin,HandleLogin>();
+        builder.Services.AddScoped<IUserActions,UserActionsServices>();
 
         // Build the application
         var app = builder.Build();
@@ -37,5 +40,6 @@ public class Program
 
         // Run the application
         app.Run();
+
     }
 }
