@@ -34,8 +34,10 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Question>()
             .HasOne(q => q.Survey)
             .WithMany(s => s.Questions)
-            .HasForeignKey(q => q.Survey_Id)
+            .HasForeignKey(q => q.SurveyId)
             .OnDelete(DeleteBehavior.Cascade);
+
+            
 
         // Answer
         modelBuilder.Entity<Answer>()

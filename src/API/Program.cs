@@ -18,11 +18,14 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         // Add your repositories and services
+         builder.Services.AddScoped<ISurveys,SurveysRepository>();
+        builder.Services.AddScoped<ISurveyServices,SurveyServices>();
         builder.Services.AddScoped<IUser, UserRepository>();
         builder.Services.AddScoped<UsersCRUDService, UserServices>();
         builder.Services.AddScoped<IHashingServices, HashingMethod>();
         builder.Services.AddScoped<ILogin,HandleLogin>();
         builder.Services.AddScoped<IUserActions,UserActionsServices>();
+       
 
         // Build the application
         var app = builder.Build();
