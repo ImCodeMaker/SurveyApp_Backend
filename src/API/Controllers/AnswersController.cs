@@ -12,7 +12,7 @@ public class AnswersController : ControllerBase
     }
 
     [HttpPost("/{userId}")]
-    public async Task<IActionResult> setTask(int userId, [FromBody] CreateAnswerDTO createAnswerDTO)
+    public async Task<IActionResult> setAnswer(int userId, [FromBody] CreateAnswerDTO createAnswerDTO)
     {
         if (createAnswerDTO == null || createAnswerDTO.Answers == null || !createAnswerDTO.Answers.Any())
         {
