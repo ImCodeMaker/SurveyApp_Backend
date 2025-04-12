@@ -25,6 +25,8 @@ public class Program
         builder.Services.AddScoped<IHashingServices, HashingMethod>();
         builder.Services.AddScoped<ILogin,HandleLogin>();
         builder.Services.AddScoped<IUserActions,UserActionsServices>();
+        builder.Services.AddScoped<IAnswersRepository,AnswersRepository>();
+        builder.Services.AddScoped<IAnswerServices,AnswerServices>();
        
 
         // Build the application
