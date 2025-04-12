@@ -27,6 +27,9 @@ public class Program
         builder.Services.AddScoped<IUserActions,UserActionsServices>();
         builder.Services.AddScoped<IAnswersRepository,AnswersRepository>();
         builder.Services.AddScoped<IAnswerServices,AnswerServices>();
+        builder.Services.AddScoped<IQuestionsStatsServices,QuestionsStatisticsServices>();
+        builder.Services.AddScoped<IQuestionsStatitisctics,QuestionsStatistics>();
+        
        
 
         // Build the application

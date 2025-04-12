@@ -13,13 +13,13 @@ public class SurveysController : ControllerBase
         _surveyServices = surveyServices;
     }
 
-    [HttpPost("/survey/{Id}")]
-    public async Task<IActionResult> createTask(SurveyCreatorDTO surveyCreatorDTO,int Id)
+    [HttpPost("/survey/{UserId}")]
+    public async Task<IActionResult> createTask(SurveyCreatorDTO surveyCreatorDTO,int UserId)
     {
         if (surveyCreatorDTO == null) return BadRequest();
         try
         {
-            var newSurvey = await _surveyServices.createSurvey(surveyCreatorDTO,Id);
+            var newSurvey = await _surveyServices.createSurvey(surveyCreatorDTO,UserId);
             return Ok(newSurvey);
         }
         catch (System.Exception)
@@ -29,20 +29,20 @@ public class SurveysController : ControllerBase
         }
     }
 
-    [HttpGet("/tasks")]
+    [HttpGet("/surveys")]
     public IActionResult getTasks()
     {
         return Ok(_surveyServices.getAllSurveys());
     }
 
-    [HttpGet("/tasks/{Id}")]
+    [HttpGet("/survey/{Id}")]
     public async Task<IActionResult> getTasksId(int Id)
     {
         var result = await _surveyServices.getSurveyId(Id);
         return Ok(result);
     }
 
-    [HttpPut("/task/{Id}")]
+    [HttpPut("/survey/{Id}")]
     public async Task<IActionResult> updateSurvey(int Id,[FromBody] EditTaskDTO editTaskDTO)
     {
         if (editTaskDTO == null) return BadRequest("You must provide data to edit a task.");
@@ -67,7 +67,7 @@ public class SurveysController : ControllerBase
         }
     }
 
-    [HttpDelete]
+    [HttpDelete("{Id}")]
     public async Task<IActionResult> deleteSurvey(int Id)
     {
         return Ok(await _surveyServices.deleteSurvey(Id));
