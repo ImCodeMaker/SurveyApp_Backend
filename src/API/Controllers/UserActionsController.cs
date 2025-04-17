@@ -26,16 +26,9 @@ public class UserActionsController : ControllerBase
 
         try
         {
-            var newUser = new User
-            {
-                Email = createUserDTO.Email,
-                Password_Hash = createUserDTO.Password_Hash,
-                Name = createUserDTO.Name,
-                LastName = createUserDTO.LastName,
-                Created_At = DateTime.Now
-            };
+            
 
-            var createdUser = await _userActions.HandleSignUp(newUser);
+            var createdUser = await _userActions.HandleSignUp(createUserDTO);
 
 
             return StatusCode(201, createdUser);
@@ -47,9 +40,9 @@ public class UserActionsController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginHandler([FromBody] LoginRequest loginRequest)
+    public async Task<IActionResult> LoginHandler([FromBody] LoginRequests loginRequest)
     {
-        if (string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password))
+        if (string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password_Hash))
         {
             return BadRequest("Email and password are required");
         }
@@ -59,7 +52,7 @@ public class UserActionsController : ControllerBase
             var user = new User
             {
                 Email = loginRequest.Email,
-                Password_Hash = loginRequest.Password // Will be hashed and verified
+                Password_Hash = loginRequest.Password_Hash // Will be hashed and verified
             };
 
             var loggedInUser = await _userActions.HandleLogin(user);
@@ -74,6 +67,32 @@ public class UserActionsController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, $"An error occurred during login {ex}");
+        }
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout([FromBody] int userId)
+    {
+        try
+        {
+            var result = await _userActions.HandleLogout(userId);
+
+            if (result == null)
+                return NotFound("User not found.");
+
+            return Ok(new
+            {
+                Success = true,
+                Message = "Logout was sucessful."
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                Success = false,
+                Message = $"Error: {ex.Message}"
+            });
         }
     }
 

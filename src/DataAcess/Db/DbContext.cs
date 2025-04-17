@@ -8,6 +8,7 @@ public class AppDbContext : DbContext
     public DbSet<Survey> Surveys { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<Answer> Answers { get; set; }
+    public DbSet<QuestionOption> QuestionOptions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,7 +38,18 @@ public class AppDbContext : DbContext
             .HasForeignKey(q => q.SurveyId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            
+
+        modelBuilder.Entity<QuestionOption>(entity =>
+       {
+           entity.HasKey(qo => qo.Id);
+           entity.Property(qo => qo.OptionText).IsRequired();
+
+           // Relación con Question
+           entity.HasOne(qo => qo.Question)
+                 .WithMany(q => q.Options)
+                 .HasForeignKey(qo => qo.QuestionId)
+                 .OnDelete(DeleteBehavior.Cascade); // Si borras una pregunta, se borran sus opciones
+       });
 
         // Answer
         modelBuilder.Entity<Answer>()

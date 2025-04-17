@@ -1,6 +1,6 @@
 public interface UsersCRUDService
 {
-    Task setUser(User user);
+    Task<User> setUser(createUserDTO user);
     List<User> GetUsers();
     Task<User> GetUsersID(int Id);
     Task deleteUser(int Id);

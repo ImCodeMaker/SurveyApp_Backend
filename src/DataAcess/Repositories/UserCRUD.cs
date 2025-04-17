@@ -3,17 +3,25 @@ using Microsoft.EntityFrameworkCore;
 public class UserRepository : IUser
 {
     private readonly AppDbContext? appDbContext;
+    private readonly IHashingServices? _hashingMethod;
+    private readonly IUserFactory _userFactory;
 
-    public UserRepository(AppDbContext _appDbContext)
+    public UserRepository(AppDbContext _appDbContext,IHashingServices? hashingMethod, IUserFactory userFactory )
     {
         appDbContext = _appDbContext;
+        _hashingMethod = hashingMethod;
+        _userFactory = userFactory;
     }
 
-    public async Task<User> createUser(User user)
+    public async Task<User> createUser(createUserDTO user)
     {
         try
         {
-            var addedEntity = await appDbContext!.Users.AddAsync(user);
+            var hashPassCode = _hashingMethod!.HashPassword(user.Password_Hash);
+
+             User newAdmin = _userFactory.CreateAdminUser(user.Email, user.Password_Hash, user.Name!, user.LastName!);
+            
+            var addedEntity = await appDbContext!.Users.AddAsync(newAdmin);
             await appDbContext.SaveChangesAsync();
             return addedEntity.Entity;
         }

@@ -1,4 +1,4 @@
 public interface IQuestionsStatsServices
 {
-    Task<MostFrequentAnswerResult?> getMostFrecuentAnswer(int surveyId, string option);
+    Task<QuestionsStatsResults?> getMostFrecuentAnswer(int surveyId);
 }

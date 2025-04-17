@@ -12,10 +12,17 @@ public class SurveysRepository : ISurveys
 
     public async Task<Survey> createSurvey(SurveyCreatorDTO survey, int Id)
     {
+        var user = await _appDbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == Id);
+
+        if (!user!.IsAdmin)
+            throw new UnauthorizedAccessException("Only administrators can create surveys");
+
+        if (survey == null)
+            throw new NullReferenceException("You must create a Survey");
+
         try
         {
-            if (survey == null) throw new NullReferenceException("You must create a Survey");
-
             var newSurvey = new Survey
             {
                 Title = survey.Title,
@@ -27,19 +34,58 @@ public class SurveysRepository : ISurveys
                 {
                     Description = question.Text ?? "Hello world",
                     QuestionType = question.Question_Type,
+                    Options = ProcessQuestionOptions(question)
                 }).ToList()
             };
 
             var createdSurvey = await _appDbContext!.Surveys.AddAsync(newSurvey);
             await _appDbContext.SaveChangesAsync();
             return createdSurvey.Entity;
-
         }
-        catch (System.Exception)
+        catch (Exception ex)
         {
 
-            throw;
+            throw new ApplicationException("Error creating survey", ex);
         }
+    }
+
+    private List<QuestionOption> ProcessQuestionOptions(QuestionsDTO question)
+    {
+        var options = new List<QuestionOption>();
+
+        switch (question.Question_Type)
+        {
+            case "Scale":
+
+                if (question.Options == null || !question.Options.Any())
+                {
+                    options = Enumerable.Range(1, 10)
+                        .Select(i => new QuestionOption { OptionText = i.ToString() })
+                        .ToList();
+                }
+                else
+                {
+
+                    options = question.Options
+                        .Select(o => new QuestionOption { OptionText = o })
+                        .ToList();
+                }
+                break;
+
+            case "MultipleChoice":
+                if (question.Options == null || !question.Options.Any())
+                    throw new ArgumentException("MultipleChoice questions must have options");
+
+                options = question.Options
+                    .Select(o => new QuestionOption { OptionText = o })
+                    .ToList();
+                break;
+
+            default:
+                throw new ArgumentException($"Unsupported question type: {question.Question_Type}");
+        }
+
+        return options;
     }
 
     public async Task<Survey> deleteSurvey(int Id)
@@ -61,22 +107,13 @@ public class SurveysRepository : ISurveys
         }
     }
 
-    public async Task<Survey> getSurveyId(int Id)
+    public async Task<Survey> GetSurveyById(int id)
     {
-        if (Id <= 0) throw new Exception("This should be greater than 0");
-
-        try
-        {
-            var searchForTask = await _appDbContext.Surveys
-     .Include(s => s.Questions)
-     .FirstOrDefaultAsync(s => s.Id == Id);
-            return await Task.FromResult(searchForTask!);
-        }
-        catch (System.Exception)
-        {
-
-            throw;
-        }
+        return await _appDbContext!.Surveys!
+            .Include(s => s.Questions!)
+                .ThenInclude(q => q.Options) 
+            .FirstOrDefaultAsync(s => s.Id == id)
+            ?? throw new Exception("Survey not found");
     }
 
     public List<Survey> getAllSurveys()

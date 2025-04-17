@@ -20,7 +20,7 @@ public class SurveyServices : ISurveyServices
     }
     public async Task<Survey> getSurveyId(int Id)
     {
-        return await _surveyrespository.getSurveyId(Id);
+        return await _surveyrespository.GetSurveyById(Id);
     }
     public List<Survey> getAllSurveys()
     {

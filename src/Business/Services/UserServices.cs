@@ -7,11 +7,11 @@ public class UserServices : UsersCRUDService
         _userRepository = userRepository;
     }
 
-    public async Task setUser(User user)
+    public async Task<User> setUser(createUserDTO user)
     {
         try
         {
-            await _userRepository!.createUser(user);
+            return await _userRepository!.createUser(user);
         }
         catch (Exception )
         {

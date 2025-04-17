@@ -1,5 +1,6 @@
 public interface ILogin
 {
-    Task<User> SignUpHandler(User user);
-    Task<User> LoginHandler(User user);
+    Task<User> SignUpHandler(createUserDTO user);
+    Task<LoginResponse> LoginHandler(User user);
+    Task<LogoutResult> LogoutHandler(int userId);
 }

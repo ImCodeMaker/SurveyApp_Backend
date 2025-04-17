@@ -9,4 +9,5 @@ public class SurveyCreatorDTO
     public bool IsPublic { get; set; } = true;
     public bool IsActive { get; set; } = true;
     public List<QuestionsDTO>? Questions { get; set; }
+    
 }

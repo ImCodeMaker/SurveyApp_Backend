@@ -11,25 +11,25 @@ public class QuestionsStats : ControllerBase
         _questionStatsServices = questionsStatitisctics;
     }
 
-    [HttpGet("{id}/{option}")]
-public async Task<IActionResult> GetMostFrequentAnswerResult(int id,string option)
-{
-    try
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetMostFrequentAnswerResult(int id)
     {
-        var result = await _questionStatsServices!.getMostFrecuentAnswer(id, option);
-
-        if (result == null)
+        try
         {
-            return NotFound(new { message = "No se encontraron respuestas para esa encuesta y opción." });
-        }
+            var result = await _questionStatsServices!.getQuestionStats(id);
 
-        return Ok(result);
+            if (result == null)
+            {
+                return NotFound(new { message = "No se encontraron respuestas para esa encuesta y opción." });
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            // Podrías loggear el error aquí si tienes un logger inyectado
+            return StatusCode(500, new { message = "Error al obtener la respuesta más frecuente.", details = ex.Message });
+        }
     }
-    catch (Exception ex)
-    {
-        // Podrías loggear el error aquí si tienes un logger inyectado
-        return StatusCode(500, new { message = "Error al obtener la respuesta más frecuente.", details = ex.Message });
-    }
-}
 
 }

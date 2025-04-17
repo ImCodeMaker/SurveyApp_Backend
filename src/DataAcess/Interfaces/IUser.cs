@@ -1,6 +1,6 @@
 public interface IUser
 {
-    Task<User> createUser(User user);
+    Task<User> createUser(createUserDTO user);
     List<User> getUsers();
     Task deleteUser(int id);
     Task updateUser(User user);

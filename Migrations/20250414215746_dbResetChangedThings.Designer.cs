@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SurveyApp_Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250414215746_dbResetChangedThings")]
+    partial class dbResetChangedThings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,28 +82,6 @@ namespace SurveyApp_Server.Migrations
                     b.HasIndex("SurveyId");
 
                     b.ToTable("Questions");
-                });
-
-            modelBuilder.Entity("QuestionOption", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("OptionText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("QuestionOptions");
                 });
 
             modelBuilder.Entity("Survey", b =>
@@ -210,17 +191,6 @@ namespace SurveyApp_Server.Migrations
                     b.Navigation("Survey");
                 });
 
-            modelBuilder.Entity("QuestionOption", b =>
-                {
-                    b.HasOne("Question", "Question")
-                        .WithMany("Options")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-                });
-
             modelBuilder.Entity("Survey", b =>
                 {
                     b.HasOne("User", "User")
@@ -235,8 +205,6 @@ namespace SurveyApp_Server.Migrations
             modelBuilder.Entity("Question", b =>
                 {
                     b.Navigation("Answers");
-
-                    b.Navigation("Options");
                 });
 
             modelBuilder.Entity("Survey", b =>

@@ -35,15 +35,8 @@ public class CRUDController : ControllerBase
     {
         try
         {
-            var newUser = new User{
-                Email = user.Email,
-                Password_Hash = user.Password_Hash,
-                Name = user.Name,
-                LastName = user.LastName
-            };
-
-            await _userServices!.setUser(newUser);
-            return StatusCode(201, new { message = $"The user  {newUser.Id} was successfully created" });
+            var createdUser = await _userServices!.setUser(user);
+            return StatusCode(201, new { message = $"The user  {createdUser.Id} was successfully created" });
         }
         catch (Exception ex)
         {

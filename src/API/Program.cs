@@ -6,48 +6,73 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add DbContext to the DI container
-        builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        // 1. Configure CORS (first)
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
 
-        // Add other services to the DI container
+        // 2. Configure Database Context
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+            sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null);
+                sqlOptions.CommandTimeout(60);
+            }));
+
+        // 3. Add Controllers
         builder.Services.AddControllers();
 
-        // Add Swagger for API documentation
+        // 4. Configure Swagger
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        // Add your repositories and services
-         builder.Services.AddScoped<ISurveys,SurveysRepository>();
-        builder.Services.AddScoped<ISurveyServices,SurveyServices>();
+        // 5. Register Application Services
+        builder.Services.AddScoped<ISurveys, SurveysRepository>();
+        builder.Services.AddScoped<ISurveyServices, SurveyServices>();
         builder.Services.AddScoped<IUser, UserRepository>();
         builder.Services.AddScoped<UsersCRUDService, UserServices>();
         builder.Services.AddScoped<IHashingServices, HashingMethod>();
-        builder.Services.AddScoped<ILogin,HandleLogin>();
-        builder.Services.AddScoped<IUserActions,UserActionsServices>();
-        builder.Services.AddScoped<IAnswersRepository,AnswersRepository>();
-        builder.Services.AddScoped<IAnswerServices,AnswerServices>();
-        builder.Services.AddScoped<IQuestionsStatsServices,QuestionsStatisticsServices>();
-        builder.Services.AddScoped<IQuestionsStatitisctics,QuestionsStatistics>();
-        
-       
+        builder.Services.AddScoped<ILogin, HandleLogin>();
+        builder.Services.AddScoped<IUserActions, UserActionsServices>();
+        builder.Services.AddScoped<IAnswersRepository, AnswersRepository>();
+        builder.Services.AddScoped<IAnswerServices, AnswerServices>();
+        builder.Services.AddScoped<IQuestionsStatsServices, QuestionsStatisticsServices>();
+        builder.Services.AddScoped<IQuestionsStatitisctics, QuestionsStatistics>();
+        builder.Services.AddScoped<IUserFactory, UserFactory>();
 
-        // Build the application
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline (Swagger)
+        // ========== MIDDLEWARE PIPELINE ========== //
+
+        // 1. CORS (must be first)
+        app.UseCors("AllowAll");
+
+        // 2. Swagger UI (development only)
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
-        // Enable HTTPS and routing
+        // 3. HTTPS Redirection
         app.UseHttpsRedirection();
+
+        // 4. Routing
+        app.UseRouting();
+
+
         app.MapControllers();
 
-        // Run the application
         app.Run();
-
     }
 }

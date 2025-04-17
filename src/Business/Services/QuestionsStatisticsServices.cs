@@ -7,8 +7,8 @@ public class QuestionsStatisticsServices : IQuestionsStatsServices
         _questionsStatistics = questionsStatistics;
     }
 
-    public async Task<MostFrequentAnswerResult?> getMostFrecuentAnswer(int surveyId, string option)
+    public async Task<QuestionsStatsResults?> getMostFrecuentAnswer(int surveyId)
     {
-        return await _questionsStatistics.getMostFrecuentAnswer(surveyId,option);
+        return await _questionsStatistics.getQuestionStats(surveyId);
     }
 }
