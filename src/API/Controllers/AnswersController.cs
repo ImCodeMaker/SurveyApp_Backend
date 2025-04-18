@@ -11,7 +11,7 @@ public class AnswersController : ControllerBase
         _answerServices = answerServices;
     }
 
-    [HttpPost("/{userId}")]
+    [HttpPost("answers/{userId}")]
     public async Task<IActionResult> setAnswer(int userId, [FromBody] CreateAnswerDTO createAnswerDTO)
     {
         if (createAnswerDTO == null || createAnswerDTO.Answers == null || !createAnswerDTO.Answers.Any())

@@ -30,8 +30,13 @@ public class UserActionsController : ControllerBase
 
             var createdUser = await _userActions.HandleSignUp(createUserDTO);
 
+            var response = new createdUserDTO{
+                Id = createdUser.Id,
+                isAdmin = createdUser.IsAdmin
+            };
 
-            return StatusCode(201, createdUser);
+
+            return StatusCode(201, response);
         }
         catch (Exception ex)
         {
