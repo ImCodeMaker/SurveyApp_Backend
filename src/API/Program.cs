@@ -75,4 +75,46 @@ public class Program
 
         app.Run();
     }
+
+    public class SurveyStatusBackgroundService : BackgroundService
+{
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<SurveyStatusBackgroundService> _logger;
+    private readonly TimeSpan _period = TimeSpan.FromHours(1); // Check every hour
+
+    public SurveyStatusBackgroundService(
+        IServiceScopeFactory scopeFactory,
+        ILogger<SurveyStatusBackgroundService> logger)
+    {
+        _scopeFactory = scopeFactory;
+        _logger = logger;
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        using PeriodicTimer timer = new PeriodicTimer(_period);
+        
+        while (!stoppingToken.IsCancellationRequested &&
+               await timer.WaitForNextTickAsync(stoppingToken))
+        {
+            try
+            {
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var surveysRepository = scope.ServiceProvider
+                        .GetRequiredService<ISurveys>();
+                    
+                    await surveysRepository.UpdateSurveyStatusBasedOnDueDate();
+                }
+                
+                _logger.LogInformation("Updated survey statuses based on due dates");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating survey statuses");
+            }
+        }
+    }
 }
+}
+

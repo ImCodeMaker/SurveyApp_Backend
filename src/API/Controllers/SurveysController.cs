@@ -14,12 +14,12 @@ public class SurveysController : ControllerBase
     }
 
     [HttpPost("/survey/{UserId}")]
-    public async Task<IActionResult> createTask(SurveyCreatorDTO surveyCreatorDTO,int UserId)
+    public async Task<IActionResult> createTask(SurveyCreatorDTO surveyCreatorDTO, int UserId)
     {
         if (surveyCreatorDTO == null) return BadRequest();
         try
         {
-            var newSurvey = await _surveyServices.createSurvey(surveyCreatorDTO,UserId);
+            var newSurvey = await _surveyServices.createSurvey(surveyCreatorDTO, UserId);
             return Ok(newSurvey);
         }
         catch (System.Exception)
@@ -36,20 +36,44 @@ public class SurveysController : ControllerBase
     }
 
     [HttpGet("/survey/{Id}")]
-    public async Task<IActionResult> getTasksId(int Id)
+    public async Task<IActionResult> GetSurveyById(int Id)
     {
-        var result = await _surveyServices.getSurveyId(Id);
-        return Ok(result);
+        try
+        {
+            var survey = await _surveyServices.getSurveyId(Id);
+            return Ok(survey);
+        }
+        catch (SurveyExpiredException ex)
+        {
+            // Return rich error details
+            return BadRequest(new
+            {
+                message = ex.Message,
+                isExpired = true,
+                surveyId = ex.SurveyId,
+                dueDate = ex.DueDate,
+                expiredDaysAgo = (DateTime.Now - ex.DueDate).TotalDays
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "An error occurred",
+                error = ex.Message
+            });
+        }
     }
 
     [HttpPut("/survey/{Id}")]
-    public async Task<IActionResult> updateSurvey(int Id,[FromBody] EditTaskDTO editTaskDTO)
+    public async Task<IActionResult> updateSurvey(int Id, [FromBody] EditTaskDTO editTaskDTO)
     {
         if (editTaskDTO == null) return BadRequest("You must provide data to edit a task.");
 
         try
         {
-            var newTask = new Survey{
+            var newTask = new Survey
+            {
                 Id = Id,
                 Title = editTaskDTO.Title,
                 Description = editTaskDTO.Description,
@@ -62,8 +86,8 @@ public class SurveysController : ControllerBase
         }
         catch (System.Exception)
         {
-            
-            return StatusCode(500, new {message = "There was an error updating the task, try again"});
+
+            return StatusCode(500, new { message = "There was an error updating the task, try again" });
         }
     }
 

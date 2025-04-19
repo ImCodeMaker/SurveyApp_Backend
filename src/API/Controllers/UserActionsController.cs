@@ -75,8 +75,8 @@ public class UserActionsController : ControllerBase
         }
     }
 
-    [HttpPost("logout")]
-    public async Task<IActionResult> Logout([FromBody] int userId)
+    [HttpPost("logout/{userId}")]
+    public async Task<IActionResult> Logout( int userId)
     {
         try
         {

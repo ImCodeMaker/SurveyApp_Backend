@@ -5,4 +5,5 @@ public interface ISurveys
     Task<Survey> GetSurveyById(int id);
     List<Survey> getAllSurveys();
     Task<Survey> updateSurvey(Survey _survey);
+    Task UpdateSurveyStatusBasedOnDueDate();
 }

@@ -29,7 +29,8 @@ public class SurveysRepository : ISurveys
                 Description = survey.Description,
                 UserId = Id,
                 IsPublic = survey.IsPublic,
-                IsActive = survey.IsActive,
+                IsActive = survey.DueDate >= DateTime.Now,
+                DueDate = survey.DueDate,
                 Questions = survey.Questions?.Select(question => new Question
                 {
                     Description = question.Text ?? "Hello world",
@@ -44,9 +45,20 @@ public class SurveysRepository : ISurveys
         }
         catch (Exception ex)
         {
-
             throw new ApplicationException("Error creating survey", ex);
         }
+    }
+
+    public async Task UpdateSurveyStatusBasedOnDueDate()
+    {
+        var surveys = await _appDbContext.Surveys.ToListAsync();
+
+        foreach (var survey in surveys)
+        {
+            survey.IsActive = survey.IsSurveyActive();
+        }
+
+        await _appDbContext.SaveChangesAsync();
     }
 
     private List<QuestionOption> ProcessQuestionOptions(QuestionsDTO question)
@@ -109,12 +121,25 @@ public class SurveysRepository : ISurveys
 
     public async Task<Survey> GetSurveyById(int id)
     {
-        return await _appDbContext!.Surveys!
+        var survey = await _appDbContext.Surveys!
             .Include(s => s.Questions!)
-                .ThenInclude(q => q.Options) 
+            .ThenInclude(q => q.Options)
             .FirstOrDefaultAsync(s => s.Id == id)
             ?? throw new Exception("Survey not found");
+
+        if (!survey.IsSurveyActive())
+        {
+            throw new SurveyExpiredException(
+                survey.Id,
+                survey.DueDate,
+                new Exception("Survey is no longer active")
+            );
+        }
+
+        return survey;
     }
+
+
 
     public List<Survey> getAllSurveys()
     {

@@ -9,6 +9,12 @@ public class Survey
     public bool IsPublic { get; set; } = true;
     public bool IsActive { get; set; } = true;
     public DateTime Created_At { get; set; } = DateTime.Now;
+    public DateTime DueDate { get; set; }
+
+     public bool IsSurveyActive()
+    {
+        return DateTime.Now <= DueDate;
+    }
 
     [JsonIgnore]
     public User? User { get; set; }
