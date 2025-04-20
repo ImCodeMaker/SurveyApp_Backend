@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 public class Answer
 {
     public int Id { get; set; }
@@ -7,7 +9,9 @@ public class Answer
     public string? Answer_Text { get; set; }
     public DateTime Created_At { get; set; } = DateTime.Now;
 
+    [JsonIgnore]
     public User? User { get; set; }
+    [JsonIgnore]
     public Survey? Survey { get; set; }
     public Question? Question { get; set; }
 }

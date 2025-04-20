@@ -49,6 +49,7 @@ public class Program
         builder.Services.AddScoped<IQuestionsStatsServices, QuestionsStatisticsServices>();
         builder.Services.AddScoped<IQuestionsStatitisctics, QuestionsStatistics>();
         builder.Services.AddScoped<IUserFactory, UserFactory>();
+        builder.Services.AddScoped<INotificationsServices, NotificacionServicio>();
 
         var app = builder.Build();
 

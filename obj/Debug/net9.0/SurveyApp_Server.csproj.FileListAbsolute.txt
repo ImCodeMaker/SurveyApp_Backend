@@ -167,3 +167,6 @@ C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\bin\Debug\net9.0\
 C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\bin\Debug\net9.0\BouncyCastle.Cryptography.dll
+C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\bin\Debug\net9.0\MailKit.dll
+C:\Users\Teudy Encarnacion\Documents\Projects\SurveyApp_Server\bin\Debug\net9.0\MimeKit.dll
